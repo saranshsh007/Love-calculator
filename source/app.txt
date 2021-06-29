@@ -1,0 +1,101 @@
+import { StatusBar } from 'expo-status-bar';
+import React from 'react';
+import Icon from '@material-ui/core/Icon';
+import { TextInput , Appbar , Button } from 'react-native-paper';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import { render } from 'react-dom';
+import { StyleSheet, Text, View , Alert,ScrollView,Image, ImageBackground} from 'react-native';
+import Displaylove from './components/Displaylove'
+
+class Mydata extends React.Component{
+
+  state = {
+    fname:'',
+    sname:'',
+    result:"loading"
+  }
+  submit(){
+    fetch(`https://love-calculator.p.rapidapi.com/getPercentage?fname=${this.state.fname}&sname=${this.state.sname}`,{headers:{
+      "x-rapidapi-key": "fd38273a04mshd3ef64554aa0921p1de0c9jsn07a1b1533861",
+      "x-rapidapi-host": "love-calculator.p.rapidapi.com",
+      "useQueryString": true
+    }})
+    .then(data=>data.json())
+    .then(data2 =>{
+      console.log(data2);
+      this.setState({
+        result:data2
+      })
+    })
+   }
+  render(){
+    return(
+    
+     <ImageBackground source={require('../AwesomeProject/rose.jpg')} style={styles.backimage}>
+      <View style={styles.container}>
+      
+       <Appbar.Header style={styles.head}>
+       <Appbar.Content style={styles.head}
+           title="Love percentage Calculator"
+         />
+       </Appbar.Header>
+       
+      <TextInput 
+       label="Boy's Name"
+       value={this.state.fname}
+       onChangeText={text => this.setState({fname:text})}
+      />
+      <TextInput
+      label="Girl's Name"
+      value={this.state.sname}
+      onChangeText={text => this.setState({sname:text})}
+      />
+    
+       <Button  style={styles.button}
+        icon="heart" mode="contained"
+        onPress={this.submit.bind(this)}>
+       Calculate 
+       </Button>
+       <Displaylove data={this.state.result}/>
+      
+      </View>
+      </ImageBackground>
+       
+    );
+  }
+}
+  export default Mydata;
+
+
+  const styles = StyleSheet.create({
+    container: {
+       flex: 1,
+      
+      
+  },
+  button:{
+     margin:5,
+     backgroundColor:'red',
+    
+
+  },
+  head:{
+    alignItems:'center',
+    backgroundColor:'red',
+    
+  },
+ backimage:{
+  flex: 1,
+  resizeMode: "cover",
+  justifyContent: "center",
+ 
+},
+header:{
+  width:'100%',
+  height:'100%',
+  flexDirection:'row',
+  alignItems:'center',
+  justifyContent:'center'
+}
+ 
+});
